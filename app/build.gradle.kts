@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.hongstudio.androidarchitecturesamplejetpackcompose"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.hongstudio.androidarchitecturesamplejetpackcompose"
