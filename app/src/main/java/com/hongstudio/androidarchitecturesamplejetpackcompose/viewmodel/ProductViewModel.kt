@@ -1,22 +1,28 @@
 package com.hongstudio.androidarchitecturesamplejetpackcompose.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.hongstudio.androidarchitecturesamplejetpackcompose.model.Product
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ProductViewModel : ViewModel() {
 
     private val _product: MutableStateFlow<ProductUiModel?> = MutableStateFlow(null)
     val product = _product.asStateFlow()
 
-    private val _errorMessage: MutableStateFlow<String?> = MutableStateFlow(null)
-    val errorMessage = _errorMessage.asStateFlow()
+    private val _errorMessage: MutableSharedFlow<String> = MutableSharedFlow()
+    val errorMessage = _errorMessage.asSharedFlow()
 
     fun onCalculateButtonClick(name: String, price: Double?) {
         if (name.isBlank() || price == null || price <= 0) {
-            _errorMessage.value = "유효한 상품명과 가격을 입력하세요."
+            viewModelScope.launch {
+                _errorMessage.emit("유효한 상품명과 가격을 입력하세요.")
+            }
             return
         }
 

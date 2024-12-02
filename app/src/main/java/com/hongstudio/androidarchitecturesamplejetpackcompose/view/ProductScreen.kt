@@ -36,19 +36,18 @@ fun ProductScreen(
     viewModel: ProductViewModel = viewModel()
 ) {
     val product = viewModel.product.collectAsStateWithLifecycle()
-    val errorMessage = viewModel.errorMessage.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
-    LaunchedEffect(errorMessage) {
-        errorMessage.value?.let {
-            // 에러 메시지 표시
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-    }
 
     // 상태 변수 선언
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
+
+    // 에러 메시지 이벤트 수신 및 Toast 표시
+    LaunchedEffect(Unit) {
+        viewModel.errorMessage.collect { errorMessage ->
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     // UI 레이아웃
     Column(
